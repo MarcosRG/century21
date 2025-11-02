@@ -1,4 +1,3 @@
-import fetch from "node-fetch";
 import { DOMParser } from "@xmldom/xmldom";
 import { ImportProperty } from "@shared/api";
 

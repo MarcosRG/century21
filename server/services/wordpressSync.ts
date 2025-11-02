@@ -1,4 +1,3 @@
-import fetch from "node-fetch";
 import { ImportProperty } from "@shared/api";
 
 interface WordPressPost {
