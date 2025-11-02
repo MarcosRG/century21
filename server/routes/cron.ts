@@ -19,7 +19,9 @@ export const handleCronImport: RequestHandler = async (_req, res) => {
 
     console.log("[CRON] Import triggered at", new Date().toISOString());
 
-    const feedUrl = process.env.XML_FEED_URL || "https://21online.century21colombia.com/xml/proppit/proppit100.xml";
+    const feedUrl =
+      process.env.XML_FEED_URL ||
+      "https://21online.century21colombia.com/xml/proppit/proppit100.xml";
     const wpUrl = process.env.WORDPRESS_URL || "https://century21laheredad.com";
     const wpUser = process.env.WORDPRESS_USER || "marcosg";
     const wpPassword = process.env.WORDPRESS_PASSWORD || "";
@@ -46,7 +48,9 @@ export const handleCronImport: RequestHandler = async (_req, res) => {
           const result = await wpSync.createOrUpdateProperty(property);
           if (result.error) {
             errors++;
-            console.error(`[CRON] Error for property ${property.id}: ${result.error}`);
+            console.error(
+              `[CRON] Error for property ${property.id}: ${result.error}`,
+            );
           } else if (result.created) {
             imported++;
           } else {
@@ -70,7 +74,10 @@ export const handleCronImport: RequestHandler = async (_req, res) => {
             await wpSync.downloadAndAttachImages(existing.id, property.images);
           }
         } catch (error) {
-          console.error(`[CRON] Error downloading images for ${property.id}:`, error);
+          console.error(
+            `[CRON] Error downloading images for ${property.id}:`,
+            error,
+          );
         }
       }
     }
@@ -83,7 +90,7 @@ export const handleCronImport: RequestHandler = async (_req, res) => {
 
     console.log("[CRON] Import completed successfully");
     console.log(
-      `[CRON] Summary - Imported: ${imported}, Updated: ${updated}, Errors: ${errors}, Archived: ${archived}`
+      `[CRON] Summary - Imported: ${imported}, Updated: ${updated}, Errors: ${errors}, Archived: ${archived}`,
     );
 
     res.status(200).json({
