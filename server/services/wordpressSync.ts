@@ -25,7 +25,7 @@ export class WordPressSync {
   private async request(
     endpoint: string,
     method: string = "GET",
-    body?: Record<string, any>
+    body?: Record<string, any>,
   ) {
     const url = `${this.baseUrl}/wp-json/wp/v2${endpoint}`;
 
@@ -46,18 +46,18 @@ export class WordPressSync {
 
     if (!response.ok) {
       const errorText = await response.text();
-      throw new Error(
-        `WordPress API Error (${response.status}): ${errorText}`
-      );
+      throw new Error(`WordPress API Error (${response.status}): ${errorText}`);
     }
 
     return response.json();
   }
 
-  async getPropertyByExternalId(externalId: string): Promise<WordPressPost | null> {
+  async getPropertyByExternalId(
+    externalId: string,
+  ): Promise<WordPressPost | null> {
     try {
       const posts = await this.request(
-        `/posts?type=real-estate&meta_key=property_identity&meta_value=${externalId}`
+        `/posts?type=real-estate&meta_key=property_identity&meta_value=${externalId}`,
       );
       return posts.length > 0 ? posts[0] : null;
     } catch (error) {
@@ -67,7 +67,7 @@ export class WordPressSync {
   }
 
   async createOrUpdateProperty(
-    property: ImportProperty
+    property: ImportProperty,
   ): Promise<{ id: number; created: boolean; error?: string }> {
     try {
       const existing = await this.getPropertyByExternalId(property.id);
@@ -86,9 +86,10 @@ export class WordPressSync {
           property_additional_detail: `Cuota: ${property.fee}`,
           property_land: property.terrain,
           property_size: property.area,
-          property_location: property.latitude && property.longitude 
-            ? `${property.latitude}, ${property.longitude}` 
-            : "",
+          property_location:
+            property.latitude && property.longitude
+              ? `${property.latitude}, ${property.longitude}`
+              : "",
           property_address: property.address,
           property_postal_code: property.postalCode,
           property_other_agent_name: property.agentName,
@@ -143,7 +144,7 @@ export class WordPressSync {
   private async setTaxonomy(
     postId: number,
     taxonomy: string,
-    terms: string[]
+    terms: string[],
   ): Promise<void> {
     try {
       // Get or create term IDs
@@ -173,7 +174,7 @@ export class WordPressSync {
 
   private async getTermId(
     taxonomy: string,
-    termName: string
+    termName: string,
   ): Promise<number | null> {
     try {
       const terms = await this.request(`/${taxonomy}?search=${termName}`);
@@ -188,7 +189,7 @@ export class WordPressSync {
 
   async downloadAndAttachImages(
     postId: number,
-    imageUrls: string[]
+    imageUrls: string[],
   ): Promise<number[]> {
     const attachmentIds: number[] = [];
 
@@ -223,13 +224,14 @@ export class WordPressSync {
 
   private async createMediaFromUrl(
     postId: number,
-    imageUrl: string
+    imageUrl: string,
   ): Promise<{ id: number } | null> {
     try {
       const response = await fetch(imageUrl, {
         timeout: 45000,
         headers: {
-          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+          "User-Agent":
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
         },
       });
 
@@ -244,7 +246,7 @@ export class WordPressSync {
       formData.append(
         "file",
         new Blob([buffer], { type: "image/jpeg" }),
-        fileName
+        fileName,
       );
 
       const uploadUrl = `${this.baseUrl}/wp-json/wp/v2/media`;
@@ -257,7 +259,9 @@ export class WordPressSync {
       });
 
       if (!uploadResponse.ok) {
-        throw new Error(`Failed to upload media: HTTP ${uploadResponse.status}`);
+        throw new Error(
+          `Failed to upload media: HTTP ${uploadResponse.status}`,
+        );
       }
 
       const media = await uploadResponse.json();
@@ -271,7 +275,7 @@ export class WordPressSync {
   async archiveOldProperties(currentIds: string[]): Promise<number> {
     try {
       const allProperties = await this.request(
-        `/posts?type=real-estate&per_page=100&status=publish`
+        `/posts?type=real-estate&per_page=100&status=publish`,
       );
 
       let archivedCount = 0;

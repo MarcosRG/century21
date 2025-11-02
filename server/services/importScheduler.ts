@@ -14,10 +14,14 @@ export class ImportScheduler {
     feedUrl: string,
     wordPressUrl: string,
     wordPressUser: string,
-    wordPressPassword: string
+    wordPressPassword: string,
   ) {
     this.xmlImporter = new XMLImporter(feedUrl);
-    this.wpSync = new WordPressSync(wordPressUrl, wordPressUser, wordPressPassword);
+    this.wpSync = new WordPressSync(
+      wordPressUrl,
+      wordPressUser,
+      wordPressPassword,
+    );
     this.status = {
       isRunning: false,
       lastRun: null,
@@ -62,16 +66,22 @@ export class ImportScheduler {
       // Phase 2: Import data in batches
       for (let i = 0; i < properties.length; i += batchSize) {
         const batch = properties.slice(i, i + batchSize);
-        const progress = Math.round(((i + batch.length) / properties.length) * 50); // 50% for data phase
+        const progress = Math.round(
+          ((i + batch.length) / properties.length) * 50,
+        ); // 50% for data phase
 
-        console.log(`[IMPORT] Processing batch ${Math.floor(i / batchSize) + 1}...`);
+        console.log(
+          `[IMPORT] Processing batch ${Math.floor(i / batchSize) + 1}...`,
+        );
 
         for (const property of batch) {
           try {
             const result = await this.wpSync.createOrUpdateProperty(property);
             if (result.error) {
               errors++;
-              console.error(`[IMPORT] Error for property ${property.id}: ${result.error}`);
+              console.error(
+                `[IMPORT] Error for property ${property.id}: ${result.error}`,
+              );
             } else if (result.created) {
               imported++;
             } else {
@@ -79,7 +89,10 @@ export class ImportScheduler {
             }
           } catch (error) {
             errors++;
-            console.error(`[IMPORT] Exception for property ${property.id}:`, error);
+            console.error(
+              `[IMPORT] Exception for property ${property.id}:`,
+              error,
+            );
           }
         }
 
@@ -97,14 +110,23 @@ export class ImportScheduler {
         const property = properties[i];
         if (property.images.length > 0) {
           try {
-            const existing = await this.wpSync.getPropertyByExternalId(property.id);
+            const existing = await this.wpSync.getPropertyByExternalId(
+              property.id,
+            );
             if (existing) {
-              await this.wpSync.downloadAndAttachImages(existing.id, property.images);
-              const progress = 50 + Math.round(((i + 1) / properties.length) * 40); // 40% for images
+              await this.wpSync.downloadAndAttachImages(
+                existing.id,
+                property.images,
+              );
+              const progress =
+                50 + Math.round(((i + 1) / properties.length) * 40); // 40% for images
               this.status.currentProgress = progress;
             }
           } catch (error) {
-            console.error(`[IMPORT] Error downloading images for ${property.id}:`, error);
+            console.error(
+              `[IMPORT] Error downloading images for ${property.id}:`,
+              error,
+            );
           }
         }
       }
@@ -124,7 +146,7 @@ export class ImportScheduler {
 
       console.log("[IMPORT] Import completed successfully");
       console.log(
-        `[IMPORT] Summary - Imported: ${imported}, Updated: ${updated}, Errors: ${errors}, Archived: ${archived}`
+        `[IMPORT] Summary - Imported: ${imported}, Updated: ${updated}, Errors: ${errors}, Archived: ${archived}`,
       );
     } catch (error) {
       const errorMsg = error instanceof Error ? error.message : "Unknown error";
@@ -167,7 +189,9 @@ export class ImportScheduler {
 
     const delay = nextMidnight.getTime() - now.getTime();
 
-    console.log(`[SCHEDULER] Next import scheduled for ${nextMidnight.toISOString()}`);
+    console.log(
+      `[SCHEDULER] Next import scheduled for ${nextMidnight.toISOString()}`,
+    );
 
     this.cronJob = setTimeout(() => {
       console.log("[SCHEDULER] Running scheduled import...");

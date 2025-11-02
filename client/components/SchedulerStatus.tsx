@@ -1,6 +1,12 @@
 import { useEffect, useState } from "react";
 import { Clock, PlayCircle, AlertCircle, CheckCircle2 } from "lucide-react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ImportStatus } from "@shared/api";
@@ -87,7 +93,8 @@ export default function SchedulerStatus() {
     } catch (error) {
       toast({
         title: "Error",
-        description: error instanceof Error ? error.message : "Failed to start import",
+        description:
+          error instanceof Error ? error.message : "Failed to start import",
         variant: "destructive",
       });
     } finally {
@@ -130,14 +137,26 @@ export default function SchedulerStatus() {
                   {status.isRunning ? "Import in Progress" : "Scheduler Status"}
                 </CardTitle>
                 <CardDescription>
-                  {status.isRunning ? `${status.currentPhase}: ${status.currentProgress}%` : "Automated daily imports"}
+                  {status.isRunning
+                    ? `${status.currentPhase}: ${status.currentProgress}%`
+                    : "Automated daily imports"}
                 </CardDescription>
               </div>
             </div>
             <Badge
-              variant={status.isRunning ? "secondary" : status.lastError ? "destructive" : "default"}
+              variant={
+                status.isRunning
+                  ? "secondary"
+                  : status.lastError
+                    ? "destructive"
+                    : "default"
+              }
             >
-              {status.isRunning ? "Running" : status.lastError ? "Error" : "Ready"}
+              {status.isRunning
+                ? "Running"
+                : status.lastError
+                  ? "Error"
+                  : "Ready"}
             </Badge>
           </div>
         </CardHeader>
@@ -155,7 +174,8 @@ export default function SchedulerStatus() {
                 />
               </div>
               <p className="text-xs text-slate-500">
-                Current phase: <span className="font-medium">{status.currentPhase}</span>
+                Current phase:{" "}
+                <span className="font-medium">{status.currentPhase}</span>
               </p>
             </div>
           )}
@@ -163,7 +183,8 @@ export default function SchedulerStatus() {
           {status.lastError && (
             <div className="rounded-lg bg-red-50 p-3">
               <p className="text-sm text-red-700">
-                <span className="font-medium">Last Error:</span> {status.lastError}
+                <span className="font-medium">Last Error:</span>{" "}
+                {status.lastError}
               </p>
             </div>
           )}
@@ -172,7 +193,7 @@ export default function SchedulerStatus() {
             <div className="rounded-lg bg-slate-50 p-3">
               <p className="text-xs text-slate-600">Last Run</p>
               <p className="mt-1 font-medium text-slate-900">
-                {status.lastRun 
+                {status.lastRun
                   ? new Date(status.lastRun).toLocaleDateString("es-ES", {
                       hour: "2-digit",
                       minute: "2-digit",
@@ -240,7 +261,9 @@ export default function SchedulerStatus() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className={`text-3xl font-bold ${status.totalErrors > 0 ? "text-red-600" : "text-slate-400"}`}>
+            <div
+              className={`text-3xl font-bold ${status.totalErrors > 0 ? "text-red-600" : "text-slate-400"}`}
+            >
               {status.totalErrors}
             </div>
             <p className="mt-1 text-xs text-slate-600">Failed imports</p>
@@ -260,7 +283,9 @@ export default function SchedulerStatus() {
             </div>
             <div>
               <p className="font-medium text-slate-900">Daily Automatic Sync</p>
-              <p className="text-slate-600">Runs every day at midnight (00:00)</p>
+              <p className="text-slate-600">
+                Runs every day at midnight (00:00)
+              </p>
             </div>
           </div>
           <div className="flex items-start gap-3">
@@ -269,7 +294,9 @@ export default function SchedulerStatus() {
             </div>
             <div>
               <p className="font-medium text-slate-900">Batch Processing</p>
-              <p className="text-slate-600">Data in batches of 20, images one at a time</p>
+              <p className="text-slate-600">
+                Data in batches of 20, images one at a time
+              </p>
             </div>
           </div>
           <div className="flex items-start gap-3">
@@ -278,7 +305,9 @@ export default function SchedulerStatus() {
             </div>
             <div>
               <p className="font-medium text-slate-900">WordPress Sync</p>
-              <p className="text-slate-600">Creates, updates, and archives properties automatically</p>
+              <p className="text-slate-600">
+                Creates, updates, and archives properties automatically
+              </p>
             </div>
           </div>
         </CardContent>

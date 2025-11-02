@@ -13,7 +13,8 @@ export class XMLImporter {
       const response = await fetch(this.feedUrl, {
         timeout: 60000,
         headers: {
-          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+          "User-Agent":
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
         },
       });
 
@@ -41,14 +42,18 @@ export class XMLImporter {
 
         const getRawText = (tagName: string): string => {
           const elements = listing.getElementsByTagName(tagName);
-          return elements.length > 0 ? (elements[0].textContent || "").trim() : "";
+          return elements.length > 0
+            ? (elements[0].textContent || "").trim()
+            : "";
         };
 
         const getNestedText = (parentTag: string, childTag: string): string => {
           const parents = listing.getElementsByTagName(parentTag);
           if (parents.length === 0) return "";
           const children = parents[0].getElementsByTagName(childTag);
-          return children.length > 0 ? (children[0].textContent || "").trim() : "";
+          return children.length > 0
+            ? (children[0].textContent || "").trim()
+            : "";
         };
 
         const getAttribute = (tagName: string, attrName: string): string => {
@@ -73,7 +78,8 @@ export class XMLImporter {
         const amenities: string[] = [];
         const amenitiesParent = listing.getElementsByTagName("amenities");
         if (amenitiesParent.length > 0) {
-          const amenityNodes = amenitiesParent[0].getElementsByTagName("amenity");
+          const amenityNodes =
+            amenitiesParent[0].getElementsByTagName("amenity");
           for (let j = 0; j < amenityNodes.length; j++) {
             const amenity = (amenityNodes[j].textContent || "").trim();
             if (amenity) amenities.push(amenity);

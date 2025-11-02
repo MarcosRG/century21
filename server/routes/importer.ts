@@ -5,7 +5,9 @@ import { ImportResponse, ImportStatus } from "@shared/api";
 let scheduler: ImportScheduler | null = null;
 
 export function initializeImporter() {
-  const feedUrl = process.env.XML_FEED_URL || "https://21online.century21colombia.com/xml/proppit/proppit100.xml";
+  const feedUrl =
+    process.env.XML_FEED_URL ||
+    "https://21online.century21colombia.com/xml/proppit/proppit100.xml";
   const wpUrl = process.env.WORDPRESS_URL || "https://century21laheredad.com";
   const wpUser = process.env.WORDPRESS_USER || "marcosg";
   const wpPassword = process.env.WORDPRESS_PASSWORD || "";

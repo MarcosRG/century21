@@ -1,7 +1,13 @@
 import { useState } from "react";
 import { Upload, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useToast } from "@/hooks/use-toast";
 
@@ -45,14 +51,18 @@ export default function ImportForm({ onXMLParsed }: ImportFormProps) {
 
         const getRawText = (tagName: string): string => {
           const elements = listing.getElementsByTagName(tagName);
-          return elements.length > 0 ? (elements[0].textContent || "").trim() : "";
+          return elements.length > 0
+            ? (elements[0].textContent || "").trim()
+            : "";
         };
 
         const getNestedText = (parentTag: string, childTag: string): string => {
           const parents = listing.getElementsByTagName(parentTag);
           if (parents.length === 0) return "";
           const children = parents[0].getElementsByTagName(childTag);
-          return children.length > 0 ? (children[0].textContent || "").trim() : "";
+          return children.length > 0
+            ? (children[0].textContent || "").trim()
+            : "";
         };
 
         const images: string[] = [];
@@ -69,9 +79,10 @@ export default function ImportForm({ onXMLParsed }: ImportFormProps) {
         if (!referenceId) continue;
 
         const priceElement = listing.getElementsByTagName("price");
-        const operation = priceElement.length > 0 
-          ? priceElement[0].getAttribute("operation") || "sale"
-          : "sale";
+        const operation =
+          priceElement.length > 0
+            ? priceElement[0].getAttribute("operation") || "sale"
+            : "sale";
 
         properties.push({
           id: referenceId,
@@ -89,11 +100,15 @@ export default function ImportForm({ onXMLParsed }: ImportFormProps) {
 
       return properties;
     } catch (err) {
-      throw new Error(`Failed to parse XML: ${err instanceof Error ? err.message : "Unknown error"}`);
+      throw new Error(
+        `Failed to parse XML: ${err instanceof Error ? err.message : "Unknown error"}`,
+      );
     }
   };
 
-  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = async (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
@@ -114,7 +129,8 @@ export default function ImportForm({ onXMLParsed }: ImportFormProps) {
         description: `Parsed ${properties.length} properties from XML`,
       });
     } catch (err) {
-      const errorMsg = err instanceof Error ? err.message : "Failed to parse XML";
+      const errorMsg =
+        err instanceof Error ? err.message : "Failed to parse XML";
       setError(errorMsg);
       toast({
         title: "Error",
@@ -156,7 +172,8 @@ export default function ImportForm({ onXMLParsed }: ImportFormProps) {
         description: `Parsed ${properties.length} properties from XML feed`,
       });
     } catch (err) {
-      const errorMsg = err instanceof Error ? err.message : "Failed to import XML";
+      const errorMsg =
+        err instanceof Error ? err.message : "Failed to import XML";
       setError(errorMsg);
       toast({
         title: "Error",
@@ -173,7 +190,8 @@ export default function ImportForm({ onXMLParsed }: ImportFormProps) {
       <CardHeader>
         <CardTitle>Import Properties</CardTitle>
         <CardDescription>
-          Upload an XML file or provide a feed URL to import real estate properties
+          Upload an XML file or provide a feed URL to import real estate
+          properties
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
@@ -186,7 +204,9 @@ export default function ImportForm({ onXMLParsed }: ImportFormProps) {
 
         {/* File Upload */}
         <div>
-          <h3 className="mb-4 text-sm font-semibold text-slate-900">Option 1: Upload XML File</h3>
+          <h3 className="mb-4 text-sm font-semibold text-slate-900">
+            Option 1: Upload XML File
+          </h3>
           <label className="flex flex-col items-center justify-center gap-4 rounded-lg border-2 border-dashed border-slate-200 bg-slate-50 p-8 cursor-pointer transition-colors hover:border-emerald-300 hover:bg-emerald-50">
             <div className="rounded-full bg-emerald-100 p-3">
               <Upload className="h-6 w-6 text-emerald-600" />
@@ -219,8 +239,13 @@ export default function ImportForm({ onXMLParsed }: ImportFormProps) {
 
         {/* URL Import */}
         <div>
-          <h3 className="mb-4 text-sm font-semibold text-slate-900">Option 2: Import from URL</h3>
-          <form onSubmit={handleUrlImport} className="flex flex-col gap-3 sm:flex-row">
+          <h3 className="mb-4 text-sm font-semibold text-slate-900">
+            Option 2: Import from URL
+          </h3>
+          <form
+            onSubmit={handleUrlImport}
+            className="flex flex-col gap-3 sm:flex-row"
+          >
             <input
               type="url"
               placeholder="https://example.com/feed.xml"
@@ -242,9 +267,10 @@ export default function ImportForm({ onXMLParsed }: ImportFormProps) {
         {/* Info Box */}
         <div className="rounded-lg bg-blue-50 p-4">
           <p className="text-sm text-blue-900">
-            <span className="font-semibold">Tip:</span> Your XML should contain listing elements with reference_id,
-            title, price, bedrooms, bathrooms, and image URLs. The importer handles batch processing
-            to ensure all data and images are imported correctly without timeouts.
+            <span className="font-semibold">Tip:</span> Your XML should contain
+            listing elements with reference_id, title, price, bedrooms,
+            bathrooms, and image URLs. The importer handles batch processing to
+            ensure all data and images are imported correctly without timeouts.
           </p>
         </div>
       </CardContent>

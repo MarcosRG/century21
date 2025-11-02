@@ -17,7 +17,9 @@ export default function Index() {
                 <Zap className="h-6 w-6 text-emerald-600" />
               </div>
               <div>
-                <h1 className="text-3xl font-bold text-slate-900">Property Importer</h1>
+                <h1 className="text-3xl font-bold text-slate-900">
+                  Property Importer
+                </h1>
                 <p className="text-sm text-slate-600">
                   Automated real estate property synchronization
                 </p>
@@ -33,9 +35,12 @@ export default function Index() {
           {/* Scheduler Section */}
           <div>
             <div className="mb-6">
-              <h2 className="text-2xl font-bold text-slate-900">Import Schedule</h2>
+              <h2 className="text-2xl font-bold text-slate-900">
+                Import Schedule
+              </h2>
               <p className="mt-1 text-slate-600">
-                Monitor and manage automatic property imports from Century 21 XML feed
+                Monitor and manage automatic property imports from Century 21
+                XML feed
               </p>
             </div>
             <SchedulerStatus />
@@ -68,7 +73,9 @@ export default function Index() {
                   <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-100">
                     <CheckCircle className="h-5 w-5 text-purple-600" />
                   </div>
-                  <h3 className="font-semibold text-slate-900">Two-Phase Process</h3>
+                  <h3 className="font-semibold text-slate-900">
+                    Two-Phase Process
+                  </h3>
                   <p className="text-sm text-slate-600">
                     Phase 1: Properties & metadata
                     <br />
@@ -85,7 +92,9 @@ export default function Index() {
                   <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-100">
                     <CheckCircle className="h-5 w-5 text-emerald-600" />
                   </div>
-                  <h3 className="font-semibold text-slate-900">WordPress Sync</h3>
+                  <h3 className="font-semibold text-slate-900">
+                    WordPress Sync
+                  </h3>
                   <p className="text-sm text-slate-600">
                     Automatically creates, updates, and archives posts
                   </p>
@@ -97,33 +106,47 @@ export default function Index() {
           {/* Documentation */}
           <Card>
             <CardContent className="pt-6">
-              <h3 className="mb-4 font-semibold text-slate-900">How It Works</h3>
+              <h3 className="mb-4 font-semibold text-slate-900">
+                How It Works
+              </h3>
               <div className="space-y-4 text-sm text-slate-600">
                 <div className="space-y-2">
-                  <h4 className="font-medium text-slate-900">🔄 Automatic Daily Sync</h4>
+                  <h4 className="font-medium text-slate-900">
+                    🔄 Automatic Daily Sync
+                  </h4>
                   <p>
-                    The system automatically downloads the XML feed from Century 21 every day at midnight (00:00) and
-                    synchronizes all properties with your WordPress database.
+                    The system automatically downloads the XML feed from Century
+                    21 every day at midnight (00:00) and synchronizes all
+                    properties with your WordPress database.
                   </p>
                 </div>
                 <div className="space-y-2">
-                  <h4 className="font-medium text-slate-900">📊 Smart Batch Processing</h4>
+                  <h4 className="font-medium text-slate-900">
+                    📊 Smart Batch Processing
+                  </h4>
                   <p>
-                    Properties are processed in batches of 20 for metadata and images one-at-a-time to prevent server timeouts
-                    and ensure data integrity.
+                    Properties are processed in batches of 20 for metadata and
+                    images one-at-a-time to prevent server timeouts and ensure
+                    data integrity.
                   </p>
                 </div>
                 <div className="space-y-2">
-                  <h4 className="font-medium text-slate-900">✨ Complete Data Sync</h4>
+                  <h4 className="font-medium text-slate-900">
+                    ✨ Complete Data Sync
+                  </h4>
                   <p>
-                    Imports all property details including title, description, price, dimensions, location, amenities, and images
-                    with proper taxonomies and custom fields.
+                    Imports all property details including title, description,
+                    price, dimensions, location, amenities, and images with
+                    proper taxonomies and custom fields.
                   </p>
                 </div>
                 <div className="space-y-2">
-                  <h4 className="font-medium text-slate-900">🗑️ Automatic Cleanup</h4>
+                  <h4 className="font-medium text-slate-900">
+                    🗑️ Automatic Cleanup
+                  </h4>
                   <p>
-                    Properties that are no longer in the XML feed are automatically moved to draft status to keep your database
+                    Properties that are no longer in the XML feed are
+                    automatically moved to draft status to keep your database
                     clean and in sync.
                   </p>
                 </div>
@@ -134,7 +157,9 @@ export default function Index() {
           {/* Technical Details */}
           <Card>
             <CardContent className="pt-6">
-              <h3 className="mb-4 font-semibold text-slate-900">Implementation Details</h3>
+              <h3 className="mb-4 font-semibold text-slate-900">
+                Implementation Details
+              </h3>
               <div className="space-y-3 text-sm text-slate-600">
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div>
@@ -150,13 +175,17 @@ export default function Index() {
                     </p>
                   </div>
                   <div>
-                    <p className="font-medium text-slate-900">Data Batch Size</p>
+                    <p className="font-medium text-slate-900">
+                      Data Batch Size
+                    </p>
                     <p className="mt-1 font-mono text-xs text-slate-500">
                       20 properties per batch
                     </p>
                   </div>
                   <div>
-                    <p className="font-medium text-slate-900">Image Processing</p>
+                    <p className="font-medium text-slate-900">
+                      Image Processing
+                    </p>
                     <p className="mt-1 font-mono text-xs text-slate-500">
                       1 property at a time (sequential)
                     </p>
