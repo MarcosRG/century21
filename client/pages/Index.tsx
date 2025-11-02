@@ -1,84 +1,26 @@
 import { useState } from "react";
-import { Upload, CheckCircle, AlertCircle, Clock, Zap } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import ImportForm from "@/components/ImportForm";
-import PreviewList from "@/components/PreviewList";
-import ProgressTracker from "@/components/ProgressTracker";
-import { useToast } from "@/hooks/use-toast";
+import { CheckCircle, AlertCircle, Zap } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import SchedulerStatus from "@/components/SchedulerStatus";
 
 export default function Index() {
-  const { toast } = useToast();
-  const [activeTab, setActiveTab] = useState("upload");
-  const [importStatus, setImportStatus] = useState<"idle" | "uploading" | "processing" | "complete" | "error">("idle");
-  const [progress, setProgress] = useState(0);
-  const [previewedProperties, setPreviewedProperties] = useState<any[]>([]);
-  const [importedCount, setImportedCount] = useState(0);
-  const [errorCount, setErrorCount] = useState(0);
-  const [lastImportTime, setLastImportTime] = useState<Date | null>(null);
-
-  const handleXMLParsed = (properties: any[]) => {
-    setPreviewedProperties(properties);
-    setActiveTab("preview");
-    toast({
-      title: "XML Parsed Successfully",
-      description: `Found ${properties.length} properties to import`,
-    });
-  };
-
-  const handleImportStart = async () => {
-    setImportStatus("processing");
-    setActiveTab("progress");
-    setProgress(0);
-    setImportedCount(0);
-    setErrorCount(0);
-
-    try {
-      // Simulate import process - in real app, this would call the backend
-      const total = previewedProperties.length;
-      
-      for (let i = 0; i < total; i++) {
-        await new Promise(resolve => setTimeout(resolve, 300));
-        const newProgress = Math.round(((i + 1) / total) * 100);
-        setProgress(newProgress);
-        setImportedCount(i + 1);
-      }
-
-      setImportStatus("complete");
-      setLastImportTime(new Date());
-      toast({
-        title: "Import Complete",
-        description: `Successfully imported ${importedCount} properties`,
-      });
-    } catch (error) {
-      setImportStatus("error");
-      setErrorCount(previewedProperties.length - importedCount);
-      toast({
-        title: "Import Failed",
-        description: "There was an error during the import process",
-        variant: "destructive",
-      });
-    }
-  };
+  const [showManualImport] = useState(false);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
       {/* Header */}
       <div className="border-b border-slate-200 bg-white">
         <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold text-slate-900">Property Importer</h1>
-              <p className="mt-1 text-sm text-slate-600">
-                Import real estate properties from XML feeds efficiently
-              </p>
-            </div>
-            <div className="hidden sm:flex items-center gap-3">
-              <div className="text-right">
-                <p className="text-2xl font-bold text-emerald-600">{importedCount}</p>
-                <p className="text-xs text-slate-600">Imported</p>
+          <div className="space-y-2">
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-100">
+                <Zap className="h-6 w-6 text-emerald-600" />
+              </div>
+              <div>
+                <h1 className="text-3xl font-bold text-slate-900">Property Importer</h1>
+                <p className="text-sm text-slate-600">
+                  Automated real estate property synchronization
+                </p>
               </div>
             </div>
           </div>
@@ -87,116 +29,140 @@ export default function Index() {
 
       {/* Main Content */}
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="upload" className="flex items-center gap-2">
-              <Upload className="h-4 w-4" />
-              <span className="hidden sm:inline">Upload</span>
-            </TabsTrigger>
-            <TabsTrigger 
-              value="preview" 
-              disabled={previewedProperties.length === 0}
-              className="flex items-center gap-2"
-            >
-              <Zap className="h-4 w-4" />
-              <span className="hidden sm:inline">Preview</span>
-            </TabsTrigger>
-            <TabsTrigger 
-              value="progress"
-              disabled={importStatus === "idle"}
-              className="flex items-center gap-2"
-            >
-              <Clock className="h-4 w-4" />
-              <span className="hidden sm:inline">Progress</span>
-            </TabsTrigger>
-          </TabsList>
+        <div className="space-y-8">
+          {/* Scheduler Section */}
+          <div>
+            <div className="mb-6">
+              <h2 className="text-2xl font-bold text-slate-900">Import Schedule</h2>
+              <p className="mt-1 text-slate-600">
+                Monitor and manage automatic property imports from Century 21 XML feed
+              </p>
+            </div>
+            <SchedulerStatus />
+          </div>
 
-          {/* Upload Tab */}
-          <TabsContent value="upload" className="space-y-4">
-            <ImportForm onXMLParsed={handleXMLParsed} />
-          </TabsContent>
-
-          {/* Preview Tab */}
-          <TabsContent value="preview" className="space-y-4">
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h2 className="text-xl font-semibold text-slate-900">
-                    Properties to Import
-                  </h2>
-                  <p className="mt-1 text-sm text-slate-600">
-                    Review {previewedProperties.length} properties before importing
+          {/* Info Sections */}
+          <div className="grid gap-6 md:grid-cols-3">
+            {/* Data Source */}
+            <Card>
+              <CardContent className="pt-6">
+                <div className="space-y-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100">
+                    <CheckCircle className="h-5 w-5 text-blue-600" />
+                  </div>
+                  <h3 className="font-semibold text-slate-900">Data Source</h3>
+                  <p className="text-sm text-slate-600">
+                    Synchronizes with Century 21 Colombia XML feed daily
+                  </p>
+                  <p className="text-xs font-mono text-slate-500">
+                    proppit100.xml
                   </p>
                 </div>
-                <Button
-                  onClick={handleImportStart}
-                  disabled={importStatus !== "idle" || previewedProperties.length === 0}
-                  className="bg-emerald-600 hover:bg-emerald-700"
-                >
-                  Start Import
-                </Button>
+              </CardContent>
+            </Card>
+
+            {/* Process Flow */}
+            <Card>
+              <CardContent className="pt-6">
+                <div className="space-y-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-100">
+                    <CheckCircle className="h-5 w-5 text-purple-600" />
+                  </div>
+                  <h3 className="font-semibold text-slate-900">Two-Phase Process</h3>
+                  <p className="text-sm text-slate-600">
+                    Phase 1: Properties & metadata
+                    <br />
+                    Phase 2: Images & galleries
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Sync Status */}
+            <Card>
+              <CardContent className="pt-6">
+                <div className="space-y-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-100">
+                    <CheckCircle className="h-5 w-5 text-emerald-600" />
+                  </div>
+                  <h3 className="font-semibold text-slate-900">WordPress Sync</h3>
+                  <p className="text-sm text-slate-600">
+                    Automatically creates, updates, and archives posts
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Documentation */}
+          <Card>
+            <CardContent className="pt-6">
+              <h3 className="mb-4 font-semibold text-slate-900">How It Works</h3>
+              <div className="space-y-4 text-sm text-slate-600">
+                <div className="space-y-2">
+                  <h4 className="font-medium text-slate-900">🔄 Automatic Daily Sync</h4>
+                  <p>
+                    The system automatically downloads the XML feed from Century 21 every day at midnight (00:00) and
+                    synchronizes all properties with your WordPress database.
+                  </p>
+                </div>
+                <div className="space-y-2">
+                  <h4 className="font-medium text-slate-900">📊 Smart Batch Processing</h4>
+                  <p>
+                    Properties are processed in batches of 20 for metadata and images one-at-a-time to prevent server timeouts
+                    and ensure data integrity.
+                  </p>
+                </div>
+                <div className="space-y-2">
+                  <h4 className="font-medium text-slate-900">✨ Complete Data Sync</h4>
+                  <p>
+                    Imports all property details including title, description, price, dimensions, location, amenities, and images
+                    with proper taxonomies and custom fields.
+                  </p>
+                </div>
+                <div className="space-y-2">
+                  <h4 className="font-medium text-slate-900">🗑️ Automatic Cleanup</h4>
+                  <p>
+                    Properties that are no longer in the XML feed are automatically moved to draft status to keep your database
+                    clean and in sync.
+                  </p>
+                </div>
               </div>
-              <PreviewList properties={previewedProperties} />
-            </div>
-          </TabsContent>
-
-          {/* Progress Tab */}
-          <TabsContent value="progress" className="space-y-4">
-            <ProgressTracker
-              status={importStatus}
-              progress={progress}
-              importedCount={importedCount}
-              errorCount={errorCount}
-              totalCount={previewedProperties.length}
-            />
-          </TabsContent>
-        </Tabs>
-
-        {/* Stats Cards */}
-        <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Imported</CardTitle>
-              <CheckCircle className="h-4 w-4 text-emerald-600" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{importedCount}</div>
-              <p className="text-xs text-slate-600">Properties successfully imported</p>
             </CardContent>
           </Card>
 
+          {/* Technical Details */}
           <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Errors</CardTitle>
-              <AlertCircle className="h-4 w-4 text-red-600" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{errorCount}</div>
-              <p className="text-xs text-slate-600">Failed imports to review</p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Progress</CardTitle>
-              <Clock className="h-4 w-4 text-blue-600" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{progress}%</div>
-              <p className="text-xs text-slate-600">Current import progress</p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Last Import</CardTitle>
-              <Zap className="h-4 w-4 text-amber-600" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">
-                {lastImportTime ? lastImportTime.toLocaleDateString() : "—"}
+            <CardContent className="pt-6">
+              <h3 className="mb-4 font-semibold text-slate-900">Implementation Details</h3>
+              <div className="space-y-3 text-sm text-slate-600">
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div>
+                    <p className="font-medium text-slate-900">Feed URL</p>
+                    <p className="mt-1 font-mono text-xs text-slate-500">
+                      21online.century21colombia.com/xml/proppit100.xml
+                    </p>
+                  </div>
+                  <div>
+                    <p className="font-medium text-slate-900">Sync Frequency</p>
+                    <p className="mt-1 font-mono text-xs text-slate-500">
+                      Daily at 00:00 (midnight)
+                    </p>
+                  </div>
+                  <div>
+                    <p className="font-medium text-slate-900">Data Batch Size</p>
+                    <p className="mt-1 font-mono text-xs text-slate-500">
+                      20 properties per batch
+                    </p>
+                  </div>
+                  <div>
+                    <p className="font-medium text-slate-900">Image Processing</p>
+                    <p className="mt-1 font-mono text-xs text-slate-500">
+                      1 property at a time (sequential)
+                    </p>
+                  </div>
+                </div>
               </div>
-              <p className="text-xs text-slate-600">When the last import completed</p>
             </CardContent>
           </Card>
         </div>
