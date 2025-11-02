@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import { CheckCircle, AlertCircle, Zap } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
